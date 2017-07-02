@@ -21,9 +21,15 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Render.cpp" />
+    <ClCompile Include="src\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Render.hpp" />
+    <ClInclude Include="src\shader.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\FragmentShader.fs" />
+    <None Include="src\VertexShader.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EA2581D4-DC8A-4A5B-8FF2-7C044707C931}</ProjectGuid>

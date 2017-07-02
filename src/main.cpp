@@ -2,10 +2,9 @@
 #include "Render.hpp"
 
 int main() {
-	Render render;
 
-	render.Start(600, 600);
-	render.Update();
+	R.Start(600, 600);
+	R.Update();
 
 	return 0;
 }
