@@ -16,24 +16,27 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{956e33fc-4574-4aa4-9540-8a672177d78d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{a6229ed7-4f6f-43dd-8be4-573de64b5347}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Render.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\shader.cpp">
       <Filter>Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="src\Render.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Render.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\shader.hpp">
       <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Render.hpp">
+      <Filter>View</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

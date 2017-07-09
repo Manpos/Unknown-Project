@@ -24,29 +24,54 @@ void Render::Start(int wWidth, int wHeight) {
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-#pragma region EraseRegion
+#pragma region Tutorial
 
-	vertices = new GLfloat[6]{
-		0.0f,  0.5f, // Vertex 1 (X, Y)
-		0.5f, -0.5f, // Vertex 2 (X, Y)
-		-0.5f, -0.5f  // Vertex 3 (X, Y)
+	vertices = new GLfloat[28]{
+		-0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Top-left
+		0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Top-right
+		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
+		-0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
+	};
+
+	elements = new GLuint[6]{
+		0, 1, 2,
+		2, 3, 0
 	};
 
 	// Create Vertex Array Object
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 	
+	// Create ebo
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6, elements, GL_STATIC_DRAW);
+
 	// Create Vertex buffer object
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 28, vertices, GL_STATIC_DRAW);
 
 	test = new Shader("./src/VertexShader.vs", "./src/FragmentShader.fs");
 	test->USE();
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(2*sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(5*sizeof(float)));
+	glEnableVertexAttribArray(2);
 	
+	// Uniform things
+	uniColor = glGetUniformLocation(test->Program, "triangleColor");
+
+	glUniform3f(uniColor, 1.0f, 1.0f, 0.0f);
+
+	// Alpha blending
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 #pragma endregion
 	
@@ -65,8 +90,8 @@ void Render::Update() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Draw a triangle from the 3 vertices
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -74,6 +99,29 @@ void Render::Update() {
 
 	glfwTerminate();
 
+}
+
+void Render::LoadTexture(GLchar* path) {
+	// SOIL load parameters
+	int width, height;
+
+	GLuint tex;
+	glGenTextures(1, &tex);
+	glBindTexture(GL_TEXTURE_2D, tex);
+	
+	// SOIL Texture loading
+	image = SOIL_load_image(path, &width, &height, 0, SOIL_LOAD_RGBA);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	SOIL_free_image_data(image);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	
 }
 
 Render::~Render() {
