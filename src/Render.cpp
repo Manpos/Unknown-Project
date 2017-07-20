@@ -104,11 +104,21 @@ void Render::Update() {
 void Render::LoadTexture(GLchar* path) {
 	// SOIL load parameters
 	int width, height;
+	textureBuffer.push_back(0);
 
-	GLuint tex;
-	glGenTextures(1, &tex);
-	glBindTexture(GL_TEXTURE_2D, tex);
+	string textureName = "tex" + std::to_string(textureBuffer.size() - 1);
 	
+	glActiveTexture(GL_TEXTURE0 + textureBuffer.size() - 1);
+
+	glGenTextures(1, &textureBuffer.back());
+	glBindTexture(GL_TEXTURE_2D, textureBuffer.back());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 	// SOIL Texture loading
 	image = SOIL_load_image(path, &width, &height, 0, SOIL_LOAD_RGBA);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
@@ -116,12 +126,8 @@ void Render::LoadTexture(GLchar* path) {
 
 	SOIL_free_image_data(image);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glUniform1i(glGetUniformLocation(test->Program, textureName.c_str()), textureBuffer.size() - 1);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
 }
 
 Render::~Render() {

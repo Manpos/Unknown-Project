@@ -6,12 +6,15 @@
 #include <GLFW\glfw3.h>
 #include <thread>
 #include <stdio.h>
+#include <iostream>
+#include <vector>
 #include <glm.hpp>
 #include "shader.hpp"
 
 #include <SOIL.h>
 
 using namespace glm;
+using namespace std;
 
 #define R Render::Instance()
 
@@ -27,6 +30,8 @@ private:
 	GLuint vao;
 	GLuint vbo;
 	GLuint ebo;
+
+	vector<GLuint> textureBuffer;
 
 	// SOIL Texture Load buffer
 	unsigned char* image;

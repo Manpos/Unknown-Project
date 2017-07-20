@@ -30,6 +30,9 @@
     <ClCompile Include="src\Render.cpp">
       <Filter>View</Filter>
     </ClCompile>
+    <ClCompile Include="src\Object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\shader.hpp">
@@ -37,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="src\Render.hpp">
       <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Object.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
