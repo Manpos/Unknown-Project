@@ -73,17 +73,28 @@ void Render::Start(int wWidth, int wHeight) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	// Transform matrix
+	transformMat = defaultMatrix;
+
 #pragma endregion
 	
 }
 
-void Render::Update() {
+void Render::Draw() {
 
 	// While loop, it will be in use meanwhile the application is open
 	while (!glfwWindowShouldClose(window)) {
 
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, GL_TRUE);
+		
+		transformMat = defaultMatrix;
+		T.TranslateObject(R.transformMat, vec3(0.0f), vec3(0.0f, 0.0f, 0.0f));
+		T.RotateObject(transformMat, (float)glfwGetTime() * 50.f, T.z);
+		T.ScaleObject(R.transformMat, T.x, 1.5f);
+
+		unsigned int transformLoc = glGetUniformLocation(test->Program, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, value_ptr(transformMat));
 
 		// Clear the screen to black
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -102,6 +113,7 @@ void Render::Update() {
 }
 
 void Render::LoadTexture(GLchar* path) {
+
 	// SOIL load parameters
 	int width, height;
 	textureBuffer.push_back(0);
