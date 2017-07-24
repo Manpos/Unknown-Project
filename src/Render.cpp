@@ -73,8 +73,17 @@ void Render::Start(int wWidth, int wHeight) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	// Store width and height
+	glfwGetFramebufferSize(window, &width, &height);
+
 	// Transform matrix
 	transformMat = defaultMatrix;
+
+	glViewport(0, 0, width, height);
+
+	//projection = perspective(radians(45.f), 800.f / 800.f, 0.1f, 100.0f);
+	//projection = perspective(radians(45.f), float(width) / float(height), 0.1f, 100.0f);
+	projection = ortho(-1.0f, 1.f, -1.0f, 1.0f, 0.1f, 100.0f);
 
 #pragma endregion
 	
@@ -88,13 +97,24 @@ void Render::Draw() {
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, GL_TRUE);
 		
-		transformMat = defaultMatrix;
-		T.TranslateObject(R.transformMat, vec3(0.0f), vec3(0.0f, 0.0f, 0.0f));
-		T.RotateObject(transformMat, (float)glfwGetTime() * 50.f, T.z);
-		T.ScaleObject(R.transformMat, T.x, 1.5f);
+		model = defaultMatrix;
+		view = defaultMatrix;
 
-		unsigned int transformLoc = glGetUniformLocation(test->Program, "transform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, value_ptr(transformMat));
+		T.RotateObject(model, glfwGetTime() * 150.f, T.x);
+		T.TranslateObject(view, -3.f, T.z);
+
+		//T.TranslateObject(model, vec3(0.0f), vec3(0.0f, 0.0f, 0.0f));
+		//T.RotateObject(model, glfwGetTime() * 150.f, T.y);
+		//T.ScaleObject(model, T.x, 1.0f);
+
+		test->USE();
+
+		unsigned int modelLoc = glGetUniformLocation(test->Program, "model");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, value_ptr(model));
+		unsigned int viewLoc = glGetUniformLocation(test->Program, "view");
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, value_ptr(view));
+		unsigned int projectionLoc = glGetUniformLocation(test->Program, "projection");
+		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, value_ptr(projection));
 
 		// Clear the screen to black
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

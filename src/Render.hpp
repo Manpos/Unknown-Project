@@ -22,7 +22,13 @@ using namespace std;
 class Render {
 private:
 	GLFWwindow* window;
+
+	int width, height;
+
 	mat4 defaultMatrix;
+	mat4 model;
+	mat4 view;
+	mat4 projection;
 
 #pragma region Tutorial
 

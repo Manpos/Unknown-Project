@@ -58,8 +58,23 @@ public:
 		return rotate(outMatrix, radians(degrees), currentAxis);
 	}
 
-	void TranslateObject(mat4 &inMatrix, vec3 currentPosition, vec3 newPosition) {
-		inMatrix = translate(inMatrix, newPosition - currentPosition);
+	void TranslateObject(mat4 &inMatrix, float displacement, AXIS axis) {
+		vec3 currentAxis;
+
+		switch (axis)
+		{
+		case x:
+			currentAxis = vec3(1.0f, 0.0f, 0.0f);
+			break;
+		case y:
+			currentAxis = vec3(0.0f, 1.0f, 0.0f);
+			break;
+		case z:
+			currentAxis = vec3(0.0f, 0.0f, 1.0f);
+			break;
+		}
+
+		inMatrix = translate(inMatrix, currentAxis * displacement);
 	}
 
 	void ScaleObject(mat4 &inMatrix, AXIS axis, float variation = 1.0f) {

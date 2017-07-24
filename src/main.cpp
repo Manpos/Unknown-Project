@@ -3,11 +3,10 @@
 
 int main() {
 
-	R.Start(600, 600);
+	R.Start(800, 800);
 	R.LoadTexture("./src/Textures/SandCake_Sticker.png");
 	R.LoadTexture("./src/Textures/twitterLogo.png");
 
-	T.TranslateObject(R.transformMat, vec3(0.0f), vec3(0.5f, -0.5f, 0.0f));
 	T.RotateObject(R.transformMat, (float)glfwGetTime() * 50.f, T.z);
 	T.ScaleObject(R.transformMat, T.x, 1.5f);
 
